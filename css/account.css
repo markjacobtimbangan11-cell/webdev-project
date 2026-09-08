@@ -1,0 +1,166 @@
+/* =========================================
+   ACCOUNT DROPDOWN
+========================================= */
+
+.account-menu {
+    position: relative;
+}
+
+.account-details {
+    position: relative;
+}
+
+.account-details > summary {
+    list-style: none;
+}
+
+.account-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.account-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 14px;
+
+    border: none;
+    background: transparent;
+
+    color: #004b4b;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+    border-radius: 10px;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.account-btn:hover {
+    background: #f1f6f5;
+    color: #0c3033;
+}
+
+.account-btn .fa-chevron-down {
+    font-size: 11px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+.account-details[open]
+.account-btn .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================
+   DROPDOWN BOX
+========================================= */
+
+.account-dropdown {
+    position: absolute;
+
+    top: calc(100% + 12px);
+    right: 0;
+
+    width: 220px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5eceb;
+    border-radius: 12px;
+
+    box-shadow:
+        0 12px 30px
+        rgba(12, 48, 51, 0.15);
+
+    z-index: 9999;
+}
+
+
+/* =========================================
+   DROPDOWN LINKS
+========================================= */
+
+.account-dropdown a {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    color: #334b4d;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.account-dropdown a:hover {
+    background: #f1f6f5;
+
+    color: #004b4b;
+}
+
+.account-dropdown a i {
+    width: 16px;
+
+    text-align: center;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.dropdown-divider {
+    width: 100%;
+    height: 1px;
+
+    margin: 6px 0;
+
+    background: #e5eceb;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.account-dropdown .logout-link {
+    color: #a84040;
+}
+
+.account-dropdown .logout-link:hover {
+    background: #fff1f1;
+
+    color: #8d3030;
+}
