@@ -15,7 +15,10 @@ $current_type = $_GET["type"] ?? "";
 
         <!-- LOGO -->
         <a href="/myhome/index.php" class="logo">
-            <img src="/myhome/images/logo.png" alt="MyHome Logo">
+            <img
+                src="/myhome/images/logo.png"
+                alt="MyHome Logo"
+            >
         </a>
 
 
@@ -50,16 +53,25 @@ $current_type = $_GET["type"] ?? "";
                 LISTING
             </a>
 
-            <a href="/myhome/index.php#about" class="nav-link">
+            <a
+                href="/myhome/index.php#about"
+                class="nav-link"
+            >
                 ABOUT US
             </a>
 
-            <a href="/myhome/index.php#footer" class="nav-link">
+            <a
+                href="/myhome/index.php#footer"
+                class="nav-link"
+            >
                 CONTACT
             </a>
 
 
-            <!-- MOBILE ACCOUNT AREA -->
+            <!-- =========================
+                 MOBILE ACCOUNT AREA
+            ========================= -->
+
             <div class="mobile-buttons">
 
                 <?php if (isset($_SESSION["user_id"])): ?>
@@ -92,6 +104,7 @@ $current_type = $_GET["type"] ?? "";
 
                     <?php else: ?>
 
+                        <!-- MY PROFILE -->
                         <a
                             href="/myhome/profile.php"
                             class="login-btn"
@@ -105,6 +118,8 @@ $current_type = $_GET["type"] ?? "";
                             ?>
                         </a>
 
+
+                        <!-- MY LISTINGS -->
                         <a
                             href="/myhome/properties/my-listings.php"
                             class="login-btn"
@@ -113,6 +128,8 @@ $current_type = $_GET["type"] ?? "";
                             My Listings
                         </a>
 
+
+                        <!-- FAVORITES -->
                         <a
                             href="/myhome/favorites.php"
                             class="login-btn"
@@ -121,6 +138,8 @@ $current_type = $_GET["type"] ?? "";
                             Favorites
                         </a>
 
+
+                        <!-- INQUIRIES -->
                         <a
                             href="/myhome/inquiries.php"
                             class="login-btn"
@@ -129,6 +148,18 @@ $current_type = $_GET["type"] ?? "";
                             Inquiries
                         </a>
 
+
+                        <!-- TRANSACTIONS -->
+                        <a
+                            href="/myhome/transactions.php"
+                            class="login-btn"
+                        >
+                            <i class="fa-solid fa-handshake"></i>
+                            Transactions
+                        </a>
+
+
+                        <!-- REVIEWS -->
                         <a
                             href="/myhome/reviews.php"
                             class="login-btn"
@@ -139,6 +170,8 @@ $current_type = $_GET["type"] ?? "";
 
                     <?php endif; ?>
 
+
+                    <!-- LOGOUT -->
                     <a
                         href="/myhome/logout.php"
                         class="register-btn"
@@ -149,6 +182,8 @@ $current_type = $_GET["type"] ?? "";
 
                 <?php else: ?>
 
+
+                    <!-- LOGIN -->
                     <a
                         href="/myhome/login.php"
                         class="login-btn"
@@ -157,6 +192,8 @@ $current_type = $_GET["type"] ?? "";
                         Login
                     </a>
 
+
+                    <!-- REGISTER -->
                     <a
                         href="/myhome/register.php"
                         class="register-btn"
@@ -172,7 +209,10 @@ $current_type = $_GET["type"] ?? "";
         </nav>
 
 
-        <!-- DESKTOP ACCOUNT AREA -->
+        <!-- =========================
+             DESKTOP ACCOUNT AREA
+        ========================= -->
+
         <div class="nav-buttons">
 
             <?php if (isset($_SESSION["user_id"])): ?>
@@ -205,42 +245,65 @@ $current_type = $_GET["type"] ?? "";
                                 $_SESSION["role"] === "admin"
                             ): ?>
 
+
+                                <!-- ADMIN DASHBOARD -->
                                 <a href="/myhome/admin/dashboard.php">
                                     <i class="fa-solid fa-gauge-high"></i>
                                     Admin Dashboard
                                 </a>
 
+
+                                <!-- ADMIN PROFILE -->
                                 <a href="/myhome/profile.php">
                                     <i class="fa-solid fa-user"></i>
                                     My Profile
                                 </a>
+
 
                             <?php else: ?>
 
+
+                                <!-- MY PROFILE -->
                                 <a href="/myhome/profile.php">
                                     <i class="fa-solid fa-user"></i>
                                     My Profile
                                 </a>
 
+
+                                <!-- MY LISTINGS -->
                                 <a href="/myhome/properties/my-listings.php">
                                     <i class="fa-solid fa-house"></i>
                                     My Listings
                                 </a>
 
+
+                                <!-- FAVORITES -->
                                 <a href="/myhome/favorites.php">
                                     <i class="fa-solid fa-heart"></i>
                                     Favorites
                                 </a>
 
+
+                                <!-- INQUIRIES -->
                                 <a href="/myhome/inquiries.php">
                                     <i class="fa-solid fa-envelope"></i>
                                     Inquiries
                                 </a>
 
+
+                                <!-- TRANSACTIONS -->
+                                <a href="/myhome/transactions.php">
+                                    <i class="fa-solid fa-handshake"></i>
+                                    Transactions
+                                </a>
+
+
+                                <!-- REVIEWS -->
                                 <a href="/myhome/reviews.php">
                                     <i class="fa-solid fa-star"></i>
                                     Leave a Review
                                 </a>
+
 
                             <?php endif; ?>
 
@@ -248,6 +311,7 @@ $current_type = $_GET["type"] ?? "";
                             <div class="dropdown-divider"></div>
 
 
+                            <!-- LOGOUT -->
                             <a
                                 href="/myhome/logout.php"
                                 class="logout-link"
@@ -262,8 +326,11 @@ $current_type = $_GET["type"] ?? "";
 
                 </div>
 
+
             <?php else: ?>
 
+
+                <!-- LOGIN -->
                 <a
                     href="/myhome/login.php"
                     class="login-btn"
@@ -272,6 +339,8 @@ $current_type = $_GET["type"] ?? "";
                     Login
                 </a>
 
+
+                <!-- REGISTER -->
                 <a
                     href="/myhome/register.php"
                     class="register-btn"
@@ -280,12 +349,16 @@ $current_type = $_GET["type"] ?? "";
                     Register
                 </a>
 
+
             <?php endif; ?>
 
         </div>
 
 
-        <!-- MOBILE MENU BUTTON -->
+        <!-- =========================
+             MOBILE MENU BUTTON
+        ========================= -->
+
         <button
             class="menu-toggle"
             id="menuToggle"

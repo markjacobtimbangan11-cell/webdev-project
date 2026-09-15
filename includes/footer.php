@@ -28,28 +28,31 @@
             </p>
 
 
+            <!-- SUBSCRIBE -->
+
             <div class="subscribe">
 
-    <input
-        type="email"
-        id="subscribeEmail"
-        placeholder="E-MAIL"
-    >
+                <input
+                    type="email"
+                    id="subscriberEmail"
+                    placeholder="E-MAIL"
+                    autocomplete="email"
+                >
 
-    <button
-        type="button"
-        id="subscribeBtn"
-    >
-        SUBSCRIBE NOW
-    </button>
+                <button
+                    type="button"
+                    id="subscriberBtn"
+                >
+                    SUBSCRIBE NOW
+                </button>
 
-</div>
+            </div>
 
 
-<div
-    class="subscribe-message"
-    id="subscribeMessage"
-></div>
+            <div
+                class="subscribe-message"
+                id="subscriberMessage"
+            ></div>
 
         </div>
 
@@ -62,23 +65,23 @@
                 PROPERTY TYPES
             </h3>
 
-            <a href="#">
+            <a href="/myhome/properties/listings.php?type=rent">
                 House for rent
             </a>
 
-            <a href="#">
+            <a href="/myhome/properties/listings.php?type=rent">
                 Apartment for rent
             </a>
 
-            <a href="#">
+            <a href="/myhome/properties/listings.php?type=sale">
                 Houses for sale
             </a>
 
-            <a href="#">
+            <a href="/myhome/properties/listings.php">
                 Condos and Townhomes
             </a>
 
-            <a href="#">
+            <a href="/myhome/properties/listings.php">
                 Luxury Properties
             </a>
 
@@ -93,34 +96,34 @@
                 QUICK LINKS
             </h3>
 
-            <a href="index.php">
+            <a href="/myhome/index.php">
                 Home
             </a>
 
-            <a href="#listing">
+            <a href="/myhome/properties/listings.php?type=rent">
                 Properties for rent
             </a>
 
-            <a href="#listing">
+            <a href="/myhome/properties/listings.php?type=sale">
                 Properties for sale
             </a>
 
-            <a href="#about">
+            <a href="/myhome/index.php#about">
                 About Us
             </a>
 
-            <a href="#testimonials">
+            <a href="/myhome/index.php#testimonials">
                 Customer Reviews
             </a>
 
-            <a href="#footer">
+            <a href="/myhome/index.php#footer">
                 Contact Us
             </a>
 
         </div>
 
 
-        <!-- CONTACT -->
+        <!-- CONTACT AND SUPPORT -->
 
         <div class="footer-column">
 
@@ -136,7 +139,7 @@
                 Schedule a Viewing
             </a>
 
-            <a href="#">
+            <a href="/myhome/properties/add-property.php">
                 List your Property
             </a>
 
@@ -157,7 +160,9 @@
     </div>
 
 
-    <!-- FOOTER BOTTOM -->
+    <!-- =========================
+         FOOTER BOTTOM
+    ========================== -->
 
     <div class="footer-bottom">
 
@@ -167,11 +172,19 @@
         </p>
 
 
+        <!-- SOCIAL MEDIA -->
+
         <div class="social-icons">
 
+
+            <!-- FACEBOOK -->
+
             <a
-                href="#"
+                href="https://www.facebook.com/mark.jacob.timbangan"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
+                title="Facebook"
             >
 
                 <i
@@ -181,9 +194,14 @@
             </a>
 
 
+            <!-- INSTAGRAM -->
+
             <a
-                href="#"
+                href="https://www.instagram.com/markeyyy_11/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
+                title="Instagram"
             >
 
                 <i
@@ -193,13 +211,18 @@
             </a>
 
 
+            <!-- TIKTOK -->
+
             <a
-                href="#"
-                aria-label="X"
+                href="https://www.tiktok.com/@hotdognasunogz"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                title="TikTok"
             >
 
                 <i
-                    class="fa-brands fa-x-twitter"
+                    class="fa-brands fa-tiktok"
                 ></i>
 
             </a>
@@ -211,9 +234,232 @@
 </footer>
 
 
-<!-- JAVASCRIPT -->
+<!-- =========================
+     MAIN JAVASCRIPT
+========================= -->
 
 <script src="/myhome/js/script.js"></script>
+
+
+<!-- =========================
+     SUBSCRIBE SCRIPT
+========================= -->
+
+<script>
+
+const subscriberBtn =
+    document.getElementById(
+        "subscriberBtn"
+    );
+
+const subscriberEmail =
+    document.getElementById(
+        "subscriberEmail"
+    );
+
+const subscriberMessage =
+    document.getElementById(
+        "subscriberMessage"
+    );
+
+
+if (
+    subscriberBtn &&
+    subscriberEmail &&
+    subscriberMessage
+) {
+
+    subscriberBtn.addEventListener(
+        "click",
+        subscribeUser
+    );
+
+
+    subscriberEmail.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                subscribeUser();
+            }
+        }
+    );
+}
+
+
+async function subscribeUser() {
+
+    const email =
+        subscriberEmail.value.trim();
+
+
+    subscriberMessage.innerHTML = "";
+
+
+    // EMPTY EMAIL
+
+    if (email === "") {
+
+        showSubscribeMessage(
+            "error",
+            "Please enter your email address."
+        );
+
+        return;
+    }
+
+
+    // EMAIL VALIDATION
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if (!emailPattern.test(email)) {
+
+        showSubscribeMessage(
+            "error",
+            "Please enter a valid email address."
+        );
+
+        return;
+    }
+
+
+    // DISABLE BUTTON WHILE SAVING
+
+    subscriberBtn.disabled = true;
+
+    subscriberBtn.textContent =
+        "SUBSCRIBING...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/myhome/subscribe.php",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        "email=" +
+                        encodeURIComponent(email)
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        // SUCCESS
+
+        if (data.success) {
+
+            showSubscribeMessage(
+                "success",
+                data.message
+            );
+
+
+            subscriberEmail.value = "";
+
+        }
+
+        // SERVER ERROR MESSAGE
+
+        else {
+
+            showSubscribeMessage(
+                "error",
+                data.message
+            );
+        }
+
+    }
+
+    catch (error) {
+
+        showSubscribeMessage(
+            "error",
+            "Something went wrong. Please try again."
+        );
+    }
+
+    finally {
+
+        subscriberBtn.disabled = false;
+
+        subscriberBtn.textContent =
+            "SUBSCRIBE NOW";
+    }
+}
+
+
+// =========================================
+// SHOW SUBSCRIBE MESSAGE
+// =========================================
+
+function showSubscribeMessage(
+    type,
+    message
+) {
+
+    let icon = "";
+
+
+    if (type === "success") {
+
+        icon =
+            '<i class="fa-solid fa-circle-check"></i>';
+
+    } else {
+
+        icon =
+            '<i class="fa-solid fa-circle-exclamation"></i>';
+    }
+
+
+    subscriberMessage.innerHTML = `
+        <div class="subscribe-alert ${type}">
+
+            ${icon}
+
+            <div>
+                <span>${message}</span>
+            </div>
+
+        </div>
+    `;
+
+
+    // HIDE SUCCESS MESSAGE AFTER 3 SECONDS
+
+    if (type === "success") {
+
+        setTimeout(
+            function () {
+
+                subscriberMessage.innerHTML =
+                    "";
+
+            },
+            3000
+        );
+    }
+}
+
+</script>
+
 
 </body>
 

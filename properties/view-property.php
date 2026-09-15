@@ -132,6 +132,16 @@ if (
 
 
 // =========================================
+// OWNER CHECK
+// =========================================
+
+$is_owner =
+    isset($_SESSION["user_id"]) &&
+    (int) $_SESSION["user_id"] ===
+    (int) $property["user_id"];
+
+
+// =========================================
 // PAGE TITLE
 // =========================================
 
@@ -169,10 +179,6 @@ include "../includes/navbar.php";
 
     <section class="view-property-container">
 
-
-        <!-- =========================
-             BACK
-        ========================== -->
 
         <a
             href="/myhome/properties/listings.php"
@@ -230,9 +236,7 @@ include "../includes/navbar.php";
                 <?php endif; ?>
 
 
-                <!-- =========================
-                     TITLE AREA
-                ========================== -->
+                <!-- TITLE AREA -->
 
                 <div class="view-property-heading">
 
@@ -330,9 +334,7 @@ include "../includes/navbar.php";
                 </div>
 
 
-                <!-- =========================
-                     DETAILS
-                ========================== -->
+                <!-- DETAILS -->
 
                 <div class="view-property-details">
 
@@ -342,11 +344,9 @@ include "../includes/navbar.php";
                         <i class="fa-solid fa-bed"></i>
 
                         <span>
-
                             <?php
                             echo (int) $property["bedrooms"];
                             ?>
-
                         </span>
 
                         <small>
@@ -361,11 +361,9 @@ include "../includes/navbar.php";
                         <i class="fa-solid fa-bath"></i>
 
                         <span>
-
                             <?php
                             echo (int) $property["bathrooms"];
                             ?>
-
                         </span>
 
                         <small>
@@ -380,13 +378,11 @@ include "../includes/navbar.php";
                         <i class="fa-solid fa-ruler-combined"></i>
 
                         <span>
-
                             <?php
                             echo htmlspecialchars(
                                 $property["area"]
                             );
                             ?>
-
                         </span>
 
                         <small>
@@ -401,13 +397,11 @@ include "../includes/navbar.php";
                         <i class="fa-solid fa-house"></i>
 
                         <span>
-
                             <?php
                             echo htmlspecialchars(
                                 $property["property_type"]
                             );
                             ?>
-
                         </span>
 
                         <small>
@@ -420,9 +414,7 @@ include "../includes/navbar.php";
                 </div>
 
 
-                <!-- =========================
-                     DESCRIPTION
-                ========================== -->
+                <!-- DESCRIPTION -->
 
                 <div class="view-property-section">
 
@@ -498,196 +490,410 @@ include "../includes/navbar.php";
 
 
                 <!-- =========================
-                     LOGGED-IN USER
+                     LOGGED IN
                 ========================== -->
 
                 <?php if (
-    isset($_SESSION["user_id"])
-): ?>
+                    isset($_SESSION["user_id"])
+                ): ?>
 
 
-    <!-- =========================
-         NORMAL USER
-    ========================== -->
-
-    <?php if (
-        isset($_SESSION["role"]) &&
-        $_SESSION["role"] === "user"
-    ): ?>
+                    <?php if (
+                        isset($_SESSION["role"]) &&
+                        $_SESSION["role"] === "user"
+                    ): ?>
 
 
-        <!-- =========================
-             PROPERTY OWNER
-        ========================== -->
+                        <!-- =========================
+                             OWNER
+                        ========================== -->
 
-        <?php if (
-            (int) $_SESSION["user_id"] ===
-            (int) $property["user_id"]
-        ): ?>
+                        <?php if ($is_owner): ?>
 
 
-            <div class="own-property-notice">
+                            <div class="own-property-notice">
 
-                <i class="fa-solid fa-house-user"></i>
+                                <i class="fa-solid fa-house-user"></i>
 
-                <span>
-                    This is your property listing.
-                </span>
+                                <span>
+                                    This is your property listing.
+                                </span>
 
-            </div>
-
-
-            <a
-                href="/myhome/properties/edit-property.php?id=<?php
-                echo (int) $property["id"];
-                ?>"
-                class="property-inquiry-btn"
-            >
-
-                <i class="fa-solid fa-pen"></i>
-
-                Edit Your Property
-
-            </a>
+                            </div>
 
 
-        <?php else: ?>
+                            <?php if (
+                                $property["status"] === "sold"
+                            ): ?>
+
+                                <div
+                                    class="own-property-notice"
+                                    style="margin-top: 12px;"
+                                >
+
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                    <span>
+                                        This property has been sold.
+                                    </span>
+
+                                </div>
 
 
-            <!-- =========================
-                 INQUIRY FORM
-            ========================== -->
+                            <?php elseif (
+                                $property["status"] === "rented"
+                            ): ?>
 
-            <form
-                method="POST"
-                action="/myhome/properties/send-inquiry.php"
-                class="property-inquiry-form"
-            >
+                                <div
+                                    class="own-property-notice"
+                                    style="margin-top: 12px;"
+                                >
 
+                                    <i class="fa-solid fa-key"></i>
 
-                <input
-                    type="hidden"
-                    name="property_id"
-                    value="<?php
-                    echo (int) $property["id"];
-                    ?>"
-                >
+                                    <span>
+                                        This property is currently rented.
+                                    </span>
 
+                                </div>
 
-                <label for="inquiry_message">
-                    Message
-                </label>
+                            <?php endif; ?>
 
 
-                <textarea
-                    id="inquiry_message"
-                    name="message"
-                    rows="5"
-                    maxlength="1000"
-                    placeholder="Hi, I'm interested in this property. Is it still available?"
-                    required
-                ></textarea>
+                            <a
+                                href="/myhome/properties/edit-property.php?id=<?php
+                                echo (int) $property["id"];
+                                ?>"
+                                class="property-inquiry-btn"
+                            >
+
+                                <i class="fa-solid fa-pen"></i>
+
+                                Edit Your Property
+
+                            </a>
 
 
-                <button
-                    type="submit"
-                    class="property-inquiry-btn"
-                >
-
-                    <i class="fa-solid fa-envelope"></i>
-
-                    Send Inquiry
-
-                </button>
+                        <?php else: ?>
 
 
-            </form>
+                            <!-- =========================
+                                 SOLD
+                            ========================== -->
+
+                            <?php if (
+                                $property["status"] === "sold"
+                            ): ?>
+
+                                <div class="own-property-notice">
+
+                                    <i class="fa-solid fa-circle-check"></i>
+
+                                    <span>
+                                        This property has already been sold.
+                                    </span>
+
+                                </div>
 
 
-            <!-- =========================
-                 FAVORITES
-            ========================== -->
+                            <!-- =========================
+                                 RENTED
+                            ========================== -->
 
-            <?php if ($is_favorite): ?>
+                            <?php elseif (
+                                $property["status"] === "rented"
+                            ): ?>
 
+                                <div class="own-property-notice">
 
-                <a
-                    href="/myhome/properties/remove-favorite.php?id=<?php
-                    echo (int) $property["id"];
-                    ?>"
-                    class="property-favorite-btn"
-                >
+                                    <i class="fa-solid fa-key"></i>
 
-                    <i class="fa-solid fa-heart"></i>
+                                    <span>
+                                        This property is currently rented.
+                                    </span>
 
-                    Remove from Favorites
-
-                </a>
+                                </div>
 
 
-            <?php else: ?>
+                            <!-- =========================
+                                 AVAILABLE
+                            ========================== -->
+
+                            <?php else: ?>
 
 
-                <a
-                    href="/myhome/properties/add-favorite.php?id=<?php
-                    echo (int) $property["id"];
-                    ?>"
-                    class="property-favorite-btn"
-                >
+                                <!-- INQUIRY FORM -->
 
-                    <i class="fa-regular fa-heart"></i>
-
-                    Add to Favorites
-
-                </a>
+                                <form
+                                    method="POST"
+                                    action="/myhome/properties/send-inquiry.php"
+                                    class="property-inquiry-form"
+                                >
 
 
-            <?php endif; ?>
+                                    <input
+                                        type="hidden"
+                                        name="property_id"
+                                        value="<?php
+                                        echo (int) $property["id"];
+                                        ?>"
+                                    >
 
 
-        <?php endif; ?>
+                                    <label for="inquiry_message">
+                                        Message
+                                    </label>
 
 
-    <?php else: ?>
+                                    <textarea
+                                        id="inquiry_message"
+                                        name="message"
+                                        rows="5"
+                                        maxlength="1000"
+                                        placeholder="Hi, I'm interested in this property. Is it still available?"
+                                        required
+                                    ></textarea>
 
 
-        <!-- =========================
-             ADMIN VIEW
-        ========================== -->
+                                    <button
+                                        type="submit"
+                                        class="property-inquiry-btn"
+                                    >
 
-        <div class="own-property-notice">
+                                        <i class="fa-solid fa-envelope"></i>
 
-            <i class="fa-solid fa-shield-halved"></i>
+                                        Send Inquiry
 
-            <span>
-                You are viewing this property as an administrator.
-            </span>
+                                    </button>
+
+
+                                </form>
+
+
+                                <!-- FAVORITES -->
+
+                                <?php if ($is_favorite): ?>
+
+
+                                    <a
+                                        href="/myhome/properties/remove-favorite.php?id=<?php
+                                        echo (int) $property["id"];
+                                        ?>"
+                                        class="property-favorite-btn"
+                                    >
+
+                                        <i class="fa-solid fa-heart"></i>
+
+                                        Remove from Favorites
+
+                                    </a>
+
+
+                                <?php else: ?>
+
+
+                                    <a
+                                        href="/myhome/properties/add-favorite.php?id=<?php
+                                        echo (int) $property["id"];
+                                        ?>"
+                                        class="property-favorite-btn"
+                                    >
+
+                                        <i class="fa-regular fa-heart"></i>
+
+                                        Add to Favorites
+
+                                    </a>
+
+
+                                <?php endif; ?>
+
+
+                                <!-- TRANSACTION REQUEST -->
+
+                                <form
+                                    action="/myhome/properties/request-transaction.php"
+                                    method="POST"
+                                    style="margin-top: 15px;"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="property_id"
+                                        value="<?php
+                                        echo (int) $property["id"];
+                                        ?>"
+                                    >
+
+
+                                    <button
+                                        type="submit"
+                                        class="property-inquiry-btn"
+                                    >
+
+
+                                        <?php if (
+                                            $property["listing_type"] === "rent"
+                                        ): ?>
+
+                                            <i class="fa-solid fa-house"></i>
+
+                                            Request to Rent
+
+
+                                        <?php else: ?>
+
+                                            <i class="fa-solid fa-cart-shopping"></i>
+
+                                            Request to Buy
+
+
+                                        <?php endif; ?>
+
+
+                                    </button>
+
+                                </form>
+
+
+                            <?php endif; ?>
+
+
+                        <?php endif; ?>
+
+
+                    <?php else: ?>
+
+
+                        <!-- =========================
+                             ADMIN
+                        ========================== -->
+
+                        <div class="own-property-notice">
+
+                            <i class="fa-solid fa-shield-halved"></i>
+
+                            <span>
+                                You are viewing this property as an administrator.
+                            </span>
+
+                        </div>
+
+
+                        <?php if (
+                            $property["status"] === "sold"
+                        ): ?>
+
+                            <div
+                                class="own-property-notice"
+                                style="margin-top: 12px;"
+                            >
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                <span>
+                                    This property has been sold.
+                                </span>
+
+                            </div>
+
+
+                        <?php elseif (
+                            $property["status"] === "rented"
+                        ): ?>
+
+                            <div
+                                class="own-property-notice"
+                                style="margin-top: 12px;"
+                            >
+
+                                <i class="fa-solid fa-key"></i>
+
+                                <span>
+                                    This property is currently rented.
+                                </span>
+
+                            </div>
+
+                        <?php endif; ?>
+
+
+                    <?php endif; ?>
+
+
+                <?php else: ?>
+
+
+                    <!-- =========================
+                         GUEST
+                    ========================== -->
+
+
+                    <?php if (
+                        $property["status"] === "sold"
+                    ): ?>
+
+                        <div class="own-property-notice">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            <span>
+                                This property has already been sold.
+                            </span>
+
+                        </div>
+
+
+                    <?php elseif (
+                        $property["status"] === "rented"
+                    ): ?>
+
+                        <div class="own-property-notice">
+
+                            <i class="fa-solid fa-key"></i>
+
+                            <span>
+                                This property is currently rented.
+                            </span>
+
+                        </div>
+
+
+                    <?php else: ?>
+
+                        <a
+                            href="/myhome/login.php"
+                            class="property-inquiry-btn"
+                        >
+
+                            <i class="fa-solid fa-right-to-bracket"></i>
+
+                            Login to Contact
+
+                        </a>
+
+                    <?php endif; ?>
+
+
+                <?php endif; ?>
+
+
+            </aside>
+
 
         </div>
 
 
-    <?php endif; ?>
+    </section>
 
 
-<?php else: ?>
+</main>
 
 
-    <!-- =========================
-         NOT LOGGED IN
-    ========================== -->
+<?php
 
-    <a
-        href="/myhome/login.php"
-        class="property-inquiry-btn"
-    >
+include "../includes/footer.php";
 
-        <i class="fa-solid fa-right-to-bracket"></i>
-
-        Login to Contact
-
-    </a>
-
-
-<?php endif; ?>
+?>
 
                    

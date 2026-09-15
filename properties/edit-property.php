@@ -12,7 +12,6 @@ $pdo = require "../config/database.php";
 if (!isset($_SESSION["user_id"])) {
 
     header("Location: /myhome/login.php");
-
     exit;
 }
 
@@ -23,10 +22,13 @@ if (
 ) {
 
     header("Location: /myhome/index.php");
-
     exit;
 }
 
+
+// =========================================
+// PROPERTY ID
+// =========================================
 
 $user_id =
     (int) $_SESSION["user_id"];
@@ -82,7 +84,6 @@ try {
     }
 
 }
-
 catch (PDOException $e) {
 
     header(
@@ -119,7 +120,6 @@ try {
         $image_stmt->fetch();
 
 }
-
 catch (PDOException $e) {
 
     $current_image = false;
@@ -162,7 +162,6 @@ $status =
 
 
 $message = "";
-
 $message_type = "";
 
 
@@ -205,6 +204,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     // =========================================
+    // LOT DOES NOT USE BEDROOMS / BATHROOMS
+    // =========================================
+
+    if ($property_type === "Lot") {
+
+        $bedrooms = "0";
+        $bathrooms = "0";
+    }
+
+
+    // =========================================
     // VALIDATION
     // =========================================
 
@@ -223,7 +233,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
@@ -236,7 +245,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
+    }
 
+    elseif (
+        !in_array(
+            $property_type,
+            [
+                "House",
+                "Apartment",
+                "Condo",
+                "Townhouse",
+                "Lot"
+            ],
+            true
+        )
+    ) {
+
+        $message =
+            "Please select a valid property type.";
+
+        $message_type =
+            "error";
     }
 
     elseif (
@@ -252,7 +281,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
@@ -268,7 +296,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
@@ -281,10 +308,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
+        $property_type !== "Lot" &&
         $bedrooms !== "" &&
         (
             !ctype_digit($bedrooms) ||
@@ -297,10 +324,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
+        $property_type !== "Lot" &&
         $bathrooms !== "" &&
         (
             !ctype_digit($bathrooms) ||
@@ -313,7 +340,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message_type =
             "error";
-
     }
 
     elseif (
@@ -325,11 +351,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ) {
 
         $message =
-            "Floor area must be a valid number.";
+            "Area must be a valid number.";
 
         $message_type =
             "error";
-
     }
 
     else {
@@ -343,16 +368,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             (float) $price;
 
 
-        $bedrooms_value =
-            $bedrooms === ""
-                ? 0
-                : (int) $bedrooms;
+        if ($property_type === "Lot") {
+
+            $bedrooms_value = 0;
+            $bathrooms_value = 0;
+
+        } else {
+
+            $bedrooms_value =
+                $bedrooms === ""
+                    ? 0
+                    : (int) $bedrooms;
 
 
-        $bathrooms_value =
-            $bathrooms === ""
-                ? 0
-                : (int) $bathrooms;
+            $bathrooms_value =
+                $bathrooms === ""
+                    ? 0
+                    : (int) $bathrooms;
+        }
 
 
         $area_value =
@@ -414,11 +447,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ) {
 
                 $message =
-                    "Only JPG, PNG and WEBP images are allowed.";
+                    "Only JPG, JPEG, PNG and WEBP images are allowed.";
 
                 $message_type =
                     "error";
-
             }
 
 
@@ -433,7 +465,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 $message_type =
                     "error";
-
             }
 
             else {
@@ -680,7 +711,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit;
 
             }
-
             catch (Throwable $e) {
 
 
@@ -739,6 +769,10 @@ include "../includes/navbar.php";
     <section class="property-form-container">
 
 
+        <!-- =========================
+             PAGE HEADER
+        ========================== -->
+
         <div class="property-form-heading">
 
             <div>
@@ -772,8 +806,14 @@ include "../includes/navbar.php";
         </div>
 
 
+        <!-- =========================
+             FORM CARD
+        ========================== -->
+
         <div class="property-form-card">
 
+
+            <!-- MESSAGE -->
 
             <?php if ($message !== ""): ?>
 
@@ -788,6 +828,7 @@ include "../includes/navbar.php";
                     <i
                         class="fa-solid fa-circle-exclamation"
                     ></i>
+
 
                     <span>
 
@@ -804,13 +845,19 @@ include "../includes/navbar.php";
             <?php endif; ?>
 
 
+            <!-- =========================
+                 FORM
+            ========================== -->
+
             <form
                 method="POST"
+                action=""
                 enctype="multipart/form-data"
+                class="property-form"
             >
 
 
-                <!-- TITLE -->
+                <!-- PROPERTY TITLE -->
 
                 <div class="property-form-group full-width">
 
@@ -857,6 +904,7 @@ include "../includes/navbar.php";
                         id="property_type"
                         name="property_type"
                         required
+                        onchange="toggleLotFields()"
                     >
 
                         <?php
@@ -1042,7 +1090,10 @@ include "../includes/navbar.php";
 
                 <!-- BEDROOMS -->
 
-                <div class="property-form-group">
+                <div
+                    class="property-form-group"
+                    id="bedroomsGroup"
+                >
 
                     <label for="bedrooms">
                         Bedrooms
@@ -1067,7 +1118,10 @@ include "../includes/navbar.php";
 
                 <!-- BATHROOMS -->
 
-                <div class="property-form-group">
+                <div
+                    class="property-form-group"
+                    id="bathroomsGroup"
+                >
 
                     <label for="bathrooms">
                         Bathrooms
@@ -1095,7 +1149,7 @@ include "../includes/navbar.php";
                 <div class="property-form-group">
 
                     <label for="area">
-                        Floor Area (m²)
+                        Area (m²)
                     </label>
 
 
@@ -1186,6 +1240,7 @@ include "../includes/navbar.php";
 
 
                     <?php if (
+                        $current_image &&
                         !empty(
                             $current_image["image_path"]
                         )
@@ -1212,7 +1267,6 @@ include "../includes/navbar.php";
 
                     <?php endif; ?>
 
-
                 </div>
 
 
@@ -1238,14 +1292,17 @@ include "../includes/navbar.php";
                     <small class="property-upload-hint">
 
                         Leave empty to keep the current image.
-                        JPG, PNG or WEBP. Maximum 5MB.
+                        JPG, JPEG, PNG or WEBP.
+                        Maximum 5MB.
 
                     </small>
 
                 </div>
 
 
-                <!-- BUTTONS -->
+                <!-- =========================
+                     BUTTONS
+                ========================== -->
 
                 <div class="property-form-actions full-width">
 
@@ -1282,6 +1339,90 @@ include "../includes/navbar.php";
     </section>
 
 </main>
+
+
+<!-- =========================================
+     LOT FIELD BEHAVIOR
+========================================= -->
+
+<script>
+
+function toggleLotFields() {
+
+    const propertyType =
+        document.getElementById(
+            "property_type"
+        );
+
+    const bedroomsGroup =
+        document.getElementById(
+            "bedroomsGroup"
+        );
+
+    const bathroomsGroup =
+        document.getElementById(
+            "bathroomsGroup"
+        );
+
+    const bedrooms =
+        document.getElementById(
+            "bedrooms"
+        );
+
+    const bathrooms =
+        document.getElementById(
+            "bathrooms"
+        );
+
+
+    if (
+        !propertyType ||
+        !bedroomsGroup ||
+        !bathroomsGroup ||
+        !bedrooms ||
+        !bathrooms
+    ) {
+
+        return;
+    }
+
+
+    const isLot =
+        propertyType.value
+            .trim()
+            .toLowerCase()
+        === "lot";
+
+
+    if (isLot) {
+
+        bedroomsGroup.style.display =
+            "none";
+
+        bathroomsGroup.style.display =
+            "none";
+
+        bedrooms.value = "0";
+
+        bathrooms.value = "0";
+
+    } else {
+
+        bedroomsGroup.style.display =
+            "";
+
+        bathroomsGroup.style.display =
+            "";
+    }
+}
+
+
+// Run immediately because the form
+// already exists above this script.
+
+toggleLotFields();
+
+</script>
 
 
 <?php

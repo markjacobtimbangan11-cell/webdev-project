@@ -1,0 +1,29 @@
+# MyHome Git ignore file
+
+# Environment / secret files
+.env
+.env.*
+
+# User-uploaded property images
+/uploads/*
+!/uploads/.gitkeep
+
+# Editor settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary / backup files
+*.tmp
+*.temp
+*.log
+*.bak
+*.swp
+*~
+
+# PHP dependency folder (if Composer is used later)
+/vendor/

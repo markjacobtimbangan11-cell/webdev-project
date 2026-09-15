@@ -291,41 +291,70 @@ include "../includes/navbar.php";
 
                                 <span>
 
-                                    <i class="fa-solid fa-bed"></i>
+                                    <div class="property-features">
 
-                                    <?php
-                                    echo (int) $property["bedrooms"];
-                                    ?>
+    <?php
+        $propertyType =
+            strtolower(
+                trim(
+                    $property["property_type"]
+                )
+            );
 
-                                    Beds
-
-                                </span>
-
-
-                                <span>
-
-                                    <i class="fa-solid fa-bath"></i>
-
-                                    <?php
-                                    echo (int) $property["bathrooms"];
-                                    ?>
-
-                                    Baths
-
-                                </span>
+        $isLot =
+            $propertyType === "lot" ||
+            $propertyType === "land";
+    ?>
 
 
-                                <span>
+    <?php if (!$isLot): ?>
 
-                                    <i class="fa-solid fa-ruler-combined"></i>
+        <span>
+            <i class="fa-solid fa-bed"></i>
 
-                                    <?php
-                                    echo htmlspecialchars(
-                                        $property["area"]
-                                    );
-                                    ?>
+            <?php
+                echo (int) $property["bedrooms"];
+            ?>
 
-                                    m²
+            Beds
+        </span>
+
+
+        <span>
+            <i class="fa-solid fa-bath"></i>
+
+            <?php
+                echo (int) $property["bathrooms"];
+            ?>
+
+            Baths
+        </span>
+
+    <?php endif; ?>
+
+
+    <span>
+        <i class="fa-solid fa-ruler-combined"></i>
+
+        <?php if ((float) $property["area"] > 0): ?>
+
+            <?php
+                echo number_format(
+                    $property["area"],
+                    2
+                );
+            ?>
+
+            m²
+
+        <?php else: ?>
+
+            Not specified
+
+        <?php endif; ?>
+    </span>
+
+</div>
 
                                 </span>
 
